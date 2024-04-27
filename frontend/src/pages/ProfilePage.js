@@ -94,6 +94,10 @@ const ProfilePage = () => {
     }
   };
 
+  // Debugging: Log the profile and posts state
+  console.log('Profile state:', profile);
+  console.log('Posts state:', posts);
+
   if (!profile) {
     return <Box>Loading...</Box>;
   }
