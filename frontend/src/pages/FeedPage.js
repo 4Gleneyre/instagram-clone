@@ -7,10 +7,12 @@ const FeedPage = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        const authToken = localStorage.getItem('auth-token');
+        console.log('Auth Token:', authToken);
         console.log('Fetching posts...');
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/feed`, {
           headers: {
-            'auth-token': localStorage.getItem('auth-token'),
+            'auth-token': authToken,
           },
         });
         console.log('Response received:', response);
@@ -22,6 +24,7 @@ const FeedPage = () => {
         setPosts(data);
       } catch (error) {
         console.error("Could not fetch feed:", error);
+        console.error("Error details:", error.message);
       }
     };
 
