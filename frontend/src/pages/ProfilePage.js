@@ -101,6 +101,14 @@ const ProfilePage = () => {
   console.log('Profile state:', profile);
   console.log('Posts state:', posts);
 
+  if (!process.env.REACT_APP_BACKEND_URL || !userId) {
+    return (
+      <Box>
+        <Text>Error: Missing backend URL or user ID.</Text>
+      </Box>
+    );
+  }
+
   if (!profile) {
     return <Box>Loading...</Box>;
   }
