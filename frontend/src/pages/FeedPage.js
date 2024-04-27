@@ -21,6 +21,13 @@ const FeedPage = () => {
         }
         const data = await response.json();
         console.log('Data received:', data);
+        // Log each post's details
+        data.forEach(post => {
+          console.log(`Post ID: ${post._id}`);
+          console.log(`Post Image: ${post.image}`);
+          console.log(`Post Caption: ${post.caption}`);
+          console.log(`Posted by User ID: ${post.user}`);
+        });
         setPosts(data);
       } catch (error) {
         console.error("Could not fetch feed:", error);
