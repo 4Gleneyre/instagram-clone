@@ -12,11 +12,13 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        console.log(`Fetching profile for user ID: ${userId}`);
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${userId}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        console.log('Profile data received:', data);
         setProfile(data);
       } catch (error) {
         console.error("Could not fetch profile:", error);
@@ -32,11 +34,13 @@ const ProfilePage = () => {
 
     const fetchPosts = async () => {
       try {
+        console.log(`Fetching posts for user ID: ${userId}`);
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/user/${userId}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
+        console.log('Posts data received:', data);
         setPosts(data);
       } catch (error) {
         console.error("Could not fetch posts:", error);
