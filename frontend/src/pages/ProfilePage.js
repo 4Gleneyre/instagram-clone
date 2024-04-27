@@ -20,6 +20,13 @@ const ProfilePage = () => {
         setProfile(data);
       } catch (error) {
         console.error("Could not fetch profile:", error);
+        toast({
+          title: 'Error fetching profile.',
+          description: error.toString(),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
       }
     };
 
@@ -33,12 +40,19 @@ const ProfilePage = () => {
         setPosts(data);
       } catch (error) {
         console.error("Could not fetch posts:", error);
+        toast({
+          title: 'Error fetching posts.',
+          description: error.toString(),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
       }
     };
 
     fetchProfile();
     fetchPosts();
-  }, [userId]);
+  }, [userId, toast]);
 
   const handleDeleteAccount = async () => {
     if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
