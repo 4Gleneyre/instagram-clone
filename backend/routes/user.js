@@ -65,6 +65,11 @@ router.post('/login', async (req, res) => {
 
   } catch (error) {
     console.error('Login error:', error);
+    const errorLogPath = path.resolve(__dirname, 'error.log');
+    if (!fs.existsSync(errorLogPath)) {
+      fs.writeFileSync(errorLogPath, '');
+    }
+    fs.appendFileSync(errorLogPath, `Login error: ${error}\n`, { flag: 'a+' });
     res.status(500).send(error.message);
   }
 });
