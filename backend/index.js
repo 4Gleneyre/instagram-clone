@@ -19,7 +19,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 // Middleware
 const corsOptions = {
   origin: function (origin, callback) {
-    if (!origin || ['http://jolly-choux-3ae1be.netlify.app', 'https://f3c3fcb13920.ngrok.app'].indexOf(origin) !== -1) {
+    if (!origin || ['http://jolly-choux-3ae1be.netlify.app', 'https://338e622c8a5a.ngrok.app'].indexOf(origin) !== -1) {
       callback(null, true)
     } else {
       callback(new Error('Not allowed by CORS'))
