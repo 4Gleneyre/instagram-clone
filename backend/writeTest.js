@@ -1,0 +1,1 @@
+const fs = require('fs'); const path = require('path'); const errorLogPath = path.resolve(__dirname, 'error.log'); try { fs.appendFileSync(errorLogPath, 'Independent write test: ' + new Date().toISOString() + '\n', { flag: 'a+' }); console.log('Write test successful.'); } catch (error) { console.error('Write test failed:', error); }
