@@ -74,6 +74,18 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Get user profile
+router.get('/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) return res.status(404).send('User not found');
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).send(error.message);
+  }
+});
+
 // Follow a user
 router.post('/follow/:userId', verify, async (req, res) => {
   try {
