@@ -10,6 +10,8 @@ const ProfilePage = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    console.log(`Environment backend URL: ${process.env.REACT_APP_BACKEND_URL}`); // Added to log the backend URL
+
     const fetchProfile = async () => {
       try {
         console.log(`Fetching profile for user ID: ${userId}`);
