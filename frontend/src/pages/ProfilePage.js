@@ -8,6 +8,7 @@ const ProfilePage = () => {
   const toast = useToast();
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
+  const [error, setError] = useState(null);
 
   console.log(`User ID from URL params: ${userId}`);
   console.log(`Backend URL from environment: ${process.env.REACT_APP_BACKEND_URL}`);
@@ -27,6 +28,7 @@ const ProfilePage = () => {
         setProfile(data);
       } catch (error) {
         console.error("Could not fetch profile:", error);
+        setError(error.toString());
         toast({
           title: 'Error fetching profile.',
           description: error.toString(),
@@ -105,6 +107,14 @@ const ProfilePage = () => {
     return (
       <Box>
         <Text>Error: Missing backend URL or user ID.</Text>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box>
+        <Text>Error: {error}</Text>
       </Box>
     );
   }
