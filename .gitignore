@@ -1,0 +1,11 @@
+# Dependency directories
+node_modules/
+
+# Production build directory
+build/
+
+# Environment variables
+.env
+
+# System files
+.DS_Store
