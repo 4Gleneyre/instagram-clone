@@ -6,6 +6,7 @@ import SignupPage from './pages/SignupPage';
 import ProfilePage from './pages/ProfilePage';
 import FeedPage from './pages/FeedPage';
 import UploadPostPage from './pages/UploadPostPage';
+import DeleteAccountPage from './pages/DeleteAccountPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/profile/:userId" element={<ProfilePage />} />
           <Route path="/upload" element={<UploadPostPage />} />
+          <Route path="/account/delete" element={<DeleteAccountPage />} />
         </Routes>
       </Router>
     </ChakraProvider>
