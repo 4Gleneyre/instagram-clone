@@ -21,7 +21,7 @@ const DeleteAccountPage = () => {
     }
 
     try {
-      const response = await fetch('https://78e6d8ee809a.ngrok.app/api/user/deleteAccount', {
+      const response = await fetch('https://78e6d8ee809a.ngrok.app/deleteAccount', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
