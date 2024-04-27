@@ -9,6 +9,9 @@ const ProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
 
+  console.log(`User ID from URL params: ${userId}`);
+  console.log(`Backend URL from environment: ${process.env.REACT_APP_BACKEND_URL}`);
+
   useEffect(() => {
     console.log(`Environment backend URL: ${process.env.REACT_APP_BACKEND_URL}`); // Added to log the backend URL
 
