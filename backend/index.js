@@ -18,7 +18,13 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Middleware
 const corsOptions = {
-  origin: ['http://jolly-choux-3ae1be.netlify.app', 'https://f3c3fcb13920.ngrok.app'],
+  origin: function (origin, callback) {
+    if (!origin || ['http://jolly-choux-3ae1be.netlify.app', 'https://f3c3fcb13920.ngrok.app'].indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 app.use(cors(corsOptions));
