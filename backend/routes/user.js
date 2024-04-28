@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const verify = require('./verifyToken');
 const fs = require('fs');
 const path = require('path');
+const mongoose = require('mongoose');
 
 // User registration
 router.post('/register', async (req, res) => {
@@ -76,8 +77,13 @@ router.post('/login', async (req, res) => {
 
 // Get user profile
 router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  console.log(`Fetching profile for ID: ${id}`);
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).send('Invalid user ID format');
+  }
   try {
-    const user = await User.findById(req.params.id).select('-password');
+    const user = await User.findById(id).select('-password');
     if (!user) return res.status(404).send('User not found');
     res.json(user);
   } catch (error) {
