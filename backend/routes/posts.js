@@ -17,8 +17,8 @@ router.get('/feed', verify, async (req, res) => {
     console.log('Posts found:', posts); // Log the posts that are being fetched
     res.json(posts);
   } catch (err) {
-    console.error('Error fetching feed posts:', err); // Log any errors encountered
-    res.status(500).json({ message: err.message });
+    console.error('Error fetching feed posts:', err.message, err.stack); // Log any errors encountered along with the stack trace
+    res.status(500).json({ message: 'Error fetching feed posts', error: err.message });
   }
 });
 
@@ -28,7 +28,8 @@ router.get('/', verify, async (req, res) => {
     const posts = await Post.find().populate('user', 'username');
     res.json(posts);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error('Error fetching all posts:', err.message, err.stack); // Log any errors encountered along with the stack trace
+    res.status(500).json({ message: 'Error fetching all posts', error: err.message });
   }
 });
 
@@ -44,7 +45,8 @@ router.post('/', verify, async (req, res) => {
     const newPost = await post.save();
     res.status(201).json(newPost);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error('Error creating post:', err.message, err.stack); // Log any errors encountered along with the stack trace
+    res.status(400).json({ message: 'Error creating post', error: err.message });
   }
 });
 
@@ -55,8 +57,8 @@ router.get('/user/:userId', verify, async (req, res) => {
     if (!userPosts) return res.status(404).send('Posts not found');
     res.json(userPosts);
   } catch (error) {
-    console.error('Error fetching user posts:', error);
-    res.status(500).send(error.message);
+    console.error('Error fetching user posts:', error.message, error.stack); // Log any errors encountered along with the stack trace
+    res.status(500).send({ message: 'Error fetching user posts', error: error.message });
   }
 });
 
@@ -74,7 +76,8 @@ async function getPost(req, res, next) {
       return res.status(404).json({ message: 'Cannot find post' });
     }
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error('Error finding post:', err.message, err.stack); // Log any errors encountered along with the stack trace
+    return res.status(500).json({ message: 'Error finding post', error: err.message });
   }
 
   res.post = post;

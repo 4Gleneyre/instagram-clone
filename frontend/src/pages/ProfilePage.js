@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Image, Text, VStack, HStack, Button, useToast } from '@chakra-ui/react';
 
+console.log(`Top-level log of REACT_APP_BACKEND_URL: ${process.env.REACT_APP_BACKEND_URL}`);
+
 const ProfilePage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
@@ -11,60 +13,67 @@ const ProfilePage = () => {
   const [error, setError] = useState(null);
 
   console.log(`User ID from URL params: ${userId}`);
-  console.log(`Backend URL from environment: ${process.env.REACT_APP_BACKEND_URL}`);
 
   useEffect(() => {
     console.log('useEffect hook executed for ProfilePage component'); // Log when useEffect is executed
+    console.log(`Backend URL from environment: ${process.env.REACT_APP_BACKEND_URL}`);
 
-    const fetchProfile = async () => {
-      try {
-        console.log(`Fetching profile for user ID: ${userId}`);
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${userId}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+    if (!process.env.REACT_APP_BACKEND_URL) {
+      console.error('REACT_APP_BACKEND_URL is not set');
+      setError('Backend URL is not set. Please check the environment variables.');
+    } else {
+      const fetchProfile = async () => {
+        try {
+          console.log(`Fetching profile for user ID: ${userId}`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${userId}`);
+          console.log('Full response for profile:', response);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log('Profile data received:', data);
+          setProfile(data);
+          console.log('Profile state updated with fetched data'); // Log after profile state is set
+        } catch (error) {
+          console.error("Could not fetch profile:", error);
+          setError(error.toString());
+          toast({
+            title: 'Error fetching profile.',
+            description: error.toString(),
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          });
         }
-        const data = await response.json();
-        console.log('Profile data received:', data);
-        setProfile(data);
-        console.log('Profile state updated with fetched data'); // Log after profile state is set
-      } catch (error) {
-        console.error("Could not fetch profile:", error);
-        setError(error.toString());
-        toast({
-          title: 'Error fetching profile.',
-          description: error.toString(),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        });
-      }
-    };
+      };
 
-    const fetchPosts = async () => {
-      try {
-        console.log(`Fetching posts for user ID: ${userId}`);
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/user/${userId}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+      const fetchPosts = async () => {
+        try {
+          console.log(`Fetching posts for user ID: ${userId}`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/user/${userId}`);
+          console.log('Full response for posts:', response);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log('Posts data received:', data);
+          setPosts(data);
+          console.log('Posts state updated with fetched data'); // Log after posts state is set
+        } catch (error) {
+          console.error("Could not fetch posts:", error);
+          toast({
+            title: 'Error fetching posts.',
+            description: error.toString(),
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+          });
         }
-        const data = await response.json();
-        console.log('Posts data received:', data);
-        setPosts(data);
-        console.log('Posts state updated with fetched data'); // Log after posts state is set
-      } catch (error) {
-        console.error("Could not fetch posts:", error);
-        toast({
-          title: 'Error fetching posts.',
-          description: error.toString(),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-        });
-      }
-    };
+      };
 
-    fetchProfile();
-    fetchPosts();
+      fetchProfile();
+      fetchPosts();
+    }
   }, [userId, toast]);
 
   const handleDeleteAccount = async () => {
