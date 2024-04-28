@@ -17,26 +17,18 @@ formData.append('image', fs.createReadStream(imagePath), {
 });
 formData.append('caption', 'This is a test caption for post upload functionality.');
 
-// Dynamically import node-fetch and fetch-blob
+// Dynamically import node-fetch
 import('node-fetch').then(({ default: fetch }) => {
-  import('fetch-blob').then(({ default: Blob }) => {
-    // Convert form-data to blob
-    formData.getBuffer().then((buffer) => {
-      const blob = new Blob([buffer], { type: 'multipart/form-data' });
+  const options = {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'auth-token': authToken,
+    },
+  };
 
-      const options = {
-        method: 'POST',
-        body: blob,
-        headers: {
-          'auth-token': authToken,
-          'Content-Type': 'multipart/form-data; boundary=' + formData.getBoundary(),
-        },
-      };
-
-      fetch(backendUrl, options)
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
-    });
-  });
+  fetch(backendUrl, options)
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
 });
