@@ -156,15 +156,15 @@ const ProfilePage = () => {
       <Text fontSize="2xl">{profile.username}</Text>
       <HStack spacing={4}>
         <VStack>
-          <Text fontSize="xl">{profile.posts.length}</Text>
+          <Text fontSize="xl">{profile?.posts?.length ?? 0}</Text>
           <Text fontSize="md">Posts</Text>
         </VStack>
         <VStack>
-          <Text fontSize="xl">{profile.followers.length}</Text>
+          <Text fontSize="xl">{profile?.followers?.length ?? 0}</Text>
           <Text fontSize="md">Followers</Text>
         </VStack>
         <VStack>
-          <Text fontSize="xl">{profile.following.length}</Text>
+          <Text fontSize="xl">{profile?.following?.length ?? 0}</Text>
           <Text fontSize="md">Following</Text>
         </VStack>
       </HStack>
