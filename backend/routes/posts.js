@@ -47,6 +47,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET request to fetch posts by a specific user
+router.get('/user/:userId', async (req, res) => {
+  if (!isValidObjectId(req.params.userId)) {
+    return res.status(400).send('Invalid user ID');
+  }
+
+  try {
+    const posts = await Post.find({ userId: req.params.userId });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // PUT request to update a post
 router.put('/:id', verify, async (req, res) => {
   if (!isValidObjectId(req.params.id)) {
