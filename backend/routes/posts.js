@@ -43,9 +43,12 @@ router.get('/', verify, async (req, res) => {
 
 // Create a new post
 router.post('/', upload.single('image'), verify, async (req, res) => {
+  console.log('Request Body:', req.body); // Log the request body
+  console.log('Request File:', req.file); // Log the request file
+
   const post = new Post({
     user: req.user._id,
-    image: req.file.path, // Use the file path from multer
+    image: req.file ? req.file.path : undefined, // Use the file path from multer if available
     caption: req.body.caption
   });
 
