@@ -33,8 +33,7 @@ const options = {
   method: 'POST',
   body: formData,
   headers: {
-    'auth-token': authToken,
-    // 'Content-Type': 'multipart/form-data' is set automatically by fetch when using FormData
+    'Authorization': `Bearer ${authToken}`,
   },
 };
 
