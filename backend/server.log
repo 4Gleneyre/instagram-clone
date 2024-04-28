@@ -1,0 +1,24 @@
+Request Body: {}
+Request File: undefined
+Error creating post: Post validation failed: image: Path `image` is required., caption: Path `caption` is required.
+ValidationError: Post validation failed: image: Path `image` is required., caption: Path `caption` is required.
+    at Document.invalidate (/home/ubuntu/instagram-clone/backend/node_modules/mongoose/lib/document.js:2788:32)
+    at /home/ubuntu/instagram-clone/backend/node_modules/mongoose/lib/document.js:2580:17
+    at /home/ubuntu/instagram-clone/backend/node_modules/mongoose/lib/schematype.js:1273:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+Request Body: {}
+Request File: undefined
+Error creating post: Post validation failed: image: Path `image` is required., caption: Path `caption` is required.
+ValidationError: Post validation failed: image: Path `image` is required., caption: Path `caption` is required.
+    at Document.invalidate (/home/ubuntu/instagram-clone/backend/node_modules/mongoose/lib/document.js:2788:32)
+    at /home/ubuntu/instagram-clone/backend/node_modules/mongoose/lib/document.js:2580:17
+    at /home/ubuntu/instagram-clone/backend/node_modules/mongoose/lib/schematype.js:1273:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
+Request Body: {}
+Request File: undefined
+Error creating post: Post validation failed: image: Path `image` is required., caption: Path `caption` is required.
+ValidationError: Post validation failed: image: Path `image` is required., caption: Path `caption` is required.
+    at Document.invalidate (/home/ubuntu/instagram-clone/backend/node_modules/mongoose/lib/document.js:2788:32)
+    at /home/ubuntu/instagram-clone/backend/node_modules/mongoose/lib/document.js:2580:17
+    at /home/ubuntu/instagram-clone/backend/node_modules/mongoose/lib/schematype.js:1273:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)
