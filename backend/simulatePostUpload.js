@@ -32,8 +32,14 @@ import('node-fetch').then(({ default: fetch }) => {
     },
   };
 
+  // Perform the fetch inside the dynamic import to ensure proper handling of FormData
   fetch(backendUrl, options)
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => console.log(data))
     .catch(error => console.error('Error:', error));
 });
