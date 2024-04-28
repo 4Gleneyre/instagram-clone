@@ -5,10 +5,20 @@ const verify = require('./verifyToken');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+const fs = require('fs');
 
 // Helper function to validate ObjectId
 const isValidObjectId = (id) => {
   return mongoose.Types.ObjectId.isValid(id);
+};
+
+// Helper function to log to a file
+const logToFile = (message) => {
+  fs.appendFileSync('server.log', message + '\n', (err) => {
+    if (err) {
+      console.error('Failed to write to log file:', err);
+    }
+  });
 };
 
 // Get feed posts
@@ -16,16 +26,16 @@ router.get('/feed', verify, async (req, res) => {
   try {
     // Assuming the User model has a 'following' field that is an array of user IDs
     const user = await User.findById(req.user._id);
-    console.log('User ID:', req.user._id); // Log the user ID
+    logToFile('User ID: ' + req.user._id); // Log the user ID to file
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log('User following:', user.following); // Log the list of user IDs the user is following
+    logToFile('User following: ' + user.following); // Log the list of user IDs the user is following to file
     const posts = await Post.find({ user: { $in: user.following } }).populate('user', 'username');
-    console.log('Posts found:', posts); // Log the posts that are being fetched
+    logToFile('Posts found: ' + JSON.stringify(posts)); // Log the posts that are being fetched to file
     res.json(posts);
   } catch (err) {
-    console.error('Error fetching feed posts:', err.message, err.stack); // Log any errors encountered along with the stack trace
+    logToFile('Error fetching feed posts: ' + err.message + '\n' + err.stack); // Log any errors encountered along with the stack trace to file
     res.status(500).json({ message: 'Error fetching feed posts', error: err.message });
   }
 });
@@ -36,15 +46,15 @@ router.get('/', verify, async (req, res) => {
     const posts = await Post.find().populate('user', 'username');
     res.json(posts);
   } catch (err) {
-    console.error('Error fetching all posts:', err.message, err.stack); // Log any errors encountered along with the stack trace
+    logToFile('Error fetching all posts: ' + err.message + '\n' + err.stack); // Log any errors encountered along with the stack trace to file
     res.status(500).json({ message: 'Error fetching all posts', error: err.message });
   }
 });
 
 // Create a new post
 router.post('/', upload.single('image'), verify, async (req, res) => {
-  console.log('Request Body:', req.body); // Log the request body
-  console.log('Request File:', req.file); // Log the request file
+  logToFile('Request Body: ' + JSON.stringify(req.body)); // Log the request body to file
+  logToFile('Request File: ' + JSON.stringify(req.file)); // Log the request file to file
 
   const post = new Post({
     user: req.user._id,
@@ -56,7 +66,7 @@ router.post('/', upload.single('image'), verify, async (req, res) => {
     const newPost = await post.save();
     res.status(201).json(newPost);
   } catch (err) {
-    console.error('Error creating post:', err.message, err.stack); // Log any errors encountered along with the stack trace
+    logToFile('Error creating post: ' + err.message + '\n' + err.stack); // Log any errors encountered along with the stack trace to file
     res.status(400).json({ message: 'Error creating post', error: err.message });
   }
 });
@@ -73,7 +83,7 @@ router.get('/user/:userId', verify, async (req, res) => {
     if (!userPosts) return res.status(404).send('Posts not found');
     res.json(userPosts);
   } catch (error) {
-    console.error('Error fetching user posts:', error.message, error.stack); // Log any errors encountered along with the stack trace
+    logToFile('Error fetching user posts: ' + error.message + '\n' + error.stack); // Log any errors encountered along with the stack trace to file
     res.status(500).send({ message: 'Error fetching user posts', error: error.message });
   }
 });
@@ -97,7 +107,7 @@ async function getPost(req, res, next) {
       return res.status(404).json({ message: 'Cannot find post' });
     }
   } catch (err) {
-    console.error('Error finding post:', err.message, err.stack); // Log any errors encountered along with the stack trace
+    logToFile('Error finding post: ' + err.message + '\n' + err.stack); // Log any errors encountered along with the stack trace to file
     return res.status(500).json({ message: 'Error finding post', error: err.message });
   }
 
