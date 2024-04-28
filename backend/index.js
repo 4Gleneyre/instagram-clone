@@ -8,6 +8,7 @@ import postRoutes from './routes/posts.js';
 import userRoutes from './routes/user.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import multer from 'multer';
 
 const app = express();
 
@@ -27,6 +28,11 @@ const corsOptions = {
   optionsSuccessStatus: 200 // For legacy browser support
 };
 app.use(cors(corsOptions));
+
+// Multer middleware for handling multipart/form-data
+const upload = multer({ dest: 'uploads/' });
+app.use(upload.any());
+
 app.use(express.json());
 
 // Routes
