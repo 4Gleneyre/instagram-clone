@@ -8,10 +8,10 @@ const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJkNmFjZTNk
 
 const imagePath = path.join(__dirname, 'test-image.jpg'); // Replace with path to a test image
 
-// Check if the image file exists, if not log an error
+// Check if the image file exists, if not log an error and exit
 if (!fs.existsSync(imagePath)) {
   console.error('Image file does not exist:', imagePath);
-  return;
+  process.exit(1);
 }
 
 const formData = new FormData();
