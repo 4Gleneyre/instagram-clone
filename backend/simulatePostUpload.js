@@ -6,6 +6,8 @@ import fetch from 'node-fetch';
 const backendUrl = 'https://777a044eb87f.ngrok.app/api/posts';
 const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJkNmFjZTNkMjA4MGE0OTYzNGU4NWQiLCJpYXQiOjE3MTQyNzAzMTh9.uqKffzbYQV7NWnrjE0SyxFgqW1a7IsK5lIilz0E2eiw'; // Auth token obtained from login simulation
 
+// Derive the directory path from import.meta.url
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
 const imagePath = path.join(__dirname, 'test-image.jpg'); // Replace with path to a test image
 
 // Check if the image file exists, if not log an error and exit
