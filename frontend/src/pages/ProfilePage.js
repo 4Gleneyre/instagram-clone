@@ -22,10 +22,12 @@ const ProfilePage = () => {
       console.error('REACT_APP_BACKEND_URL is not set');
       setError('Backend URL is not set. Please check the environment variables.');
     } else {
+      const validUserId = '507f1f77bcf86cd799439011'; // Simulated valid ObjectId
+
       const fetchProfile = async () => {
         try {
           console.log(`Fetching profile for user ID: ${userId}`);
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${userId}`, {
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${validUserId}`, {
             headers: {
               'Content-Type': 'application/json',
               'auth-token': localStorage.getItem('auth-token')
@@ -55,7 +57,7 @@ const ProfilePage = () => {
       const fetchPosts = async () => {
         try {
           console.log(`Fetching posts for user ID: ${userId}`);
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/user/${userId}`, {
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/user/${validUserId}`, {
             headers: {
               'Content-Type': 'application/json',
               'auth-token': localStorage.getItem('auth-token')
