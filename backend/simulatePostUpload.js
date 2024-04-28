@@ -23,6 +23,11 @@ formData.append('image', fs.createReadStream(imagePath), {
 });
 formData.append('caption', 'This is a test caption for post upload functionality.');
 
+// Log FormData contents for debugging
+for (const [key, value] of formData) {
+  console.log(key, value);
+}
+
 // Set headers for multipart/form-data
 const options = {
   method: 'POST',
