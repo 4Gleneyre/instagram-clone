@@ -1,7 +1,7 @@
-import fetch from 'node-fetch';
-import FormData from 'form-data';
-import fs from 'fs';
-import path from 'path';
+const fetch = require('node-fetch');
+const FormData = require('form-data');
+const fs = require('fs');
+const path = require('path');
 
 const backendUrl = 'https://777a044eb87f.ngrok.app/api/posts';
 const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJkNmFjZTNkMjA4MGE0OTYzNGU4NWQiLCJpYXQiOjE3MTQyNzAzMTh9.uqKffzbYQV7NWnrjE0SyxFgqW1a7IsK5lIilz0E2eiw'; // Auth token obtained from login simulation
