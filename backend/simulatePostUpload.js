@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch');
 const FormData = require('form-data');
 
 const backendUrl = 'https://777a044eb87f.ngrok.app/api/posts';
@@ -14,24 +13,27 @@ if (!fs.existsSync(imagePath)) {
   return;
 }
 
-const formData = new FormData();
-formData.append('image', fs.createReadStream(imagePath), {
-  filename: 'test-image.jpg',
-  contentType: 'image/jpeg',
+// Dynamically import node-fetch and FormData
+import('node-fetch').then(({ default: fetch }) => {
+  const formData = new FormData();
+  formData.append('image', fs.createReadStream(imagePath), {
+    filename: 'test-image.jpg',
+    contentType: 'image/jpeg',
+  });
+  formData.append('caption', 'This is a test caption for post upload functionality.');
+
+  // Set headers for multipart/form-data
+  const options = {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'auth-token': authToken,
+      // 'Content-Type': 'multipart/form-data' is set automatically by fetch when using FormData
+    },
+  };
+
+  fetch(backendUrl, options)
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
 });
-formData.append('caption', 'This is a test caption for post upload functionality.');
-
-// Set headers for multipart/form-data
-const options = {
-  method: 'POST',
-  body: formData,
-  headers: {
-    'auth-token': authToken,
-    // 'Content-Type': 'multipart/form-data' is set automatically by fetch when using FormData
-  },
-};
-
-fetch(backendUrl, options)
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));
