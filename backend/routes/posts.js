@@ -115,4 +115,4 @@ async function getPost(req, res, next) {
   next();
 }
 
-module.exports = router;
+export default router;
