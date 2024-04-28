@@ -68,8 +68,8 @@ router.get('/feed', verify, async (req, res) => {
     const user = await User.findById(req.user._id);
     const followedUsers = user.following.map(followedUser => followedUser._id);
 
-    // Find posts where the userId is in the list of followed users
-    const posts = await Post.find({ userId: { $in: followedUsers } }).sort({ createdAt: -1 });
+    // Find posts where the user is in the list of followed users
+    const posts = await Post.find({ user: { $in: followedUsers } }).sort({ createdAt: -1 });
     res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err);
