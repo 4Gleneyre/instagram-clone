@@ -14,7 +14,7 @@ const ProfilePage = () => {
   console.log(`Backend URL from environment: ${process.env.REACT_APP_BACKEND_URL}`);
 
   useEffect(() => {
-    console.log(`Environment backend URL: ${process.env.REACT_APP_BACKEND_URL}`); // Added to log the backend URL
+    console.log('useEffect hook executed for ProfilePage component'); // Log when useEffect is executed
 
     const fetchProfile = async () => {
       try {
@@ -26,6 +26,7 @@ const ProfilePage = () => {
         const data = await response.json();
         console.log('Profile data received:', data);
         setProfile(data);
+        console.log('Profile state updated with fetched data'); // Log after profile state is set
       } catch (error) {
         console.error("Could not fetch profile:", error);
         setError(error.toString());
@@ -49,6 +50,7 @@ const ProfilePage = () => {
         const data = await response.json();
         console.log('Posts data received:', data);
         setPosts(data);
+        console.log('Posts state updated with fetched data'); // Log after posts state is set
       } catch (error) {
         console.error("Could not fetch posts:", error);
         toast({
