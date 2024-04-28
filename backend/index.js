@@ -22,7 +22,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Middleware
 const corsOptions = {
-  origin: ['https://jolly-choux-3ae1be.netlify.app', 'https://777a044eb87f.ngrok.app'],
+  origin: ['https://jolly-choux-3ae1be.netlify.app', 'https://fc18220fe6ef.ngrok.app'],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 200 // For legacy browser support
