@@ -3,6 +3,8 @@ const Post = require('../models/Post');
 const User = require('../models/User');
 const verify = require('./verifyToken');
 const mongoose = require('mongoose');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 // Helper function to validate ObjectId
 const isValidObjectId = (id) => {
@@ -40,10 +42,10 @@ router.get('/', verify, async (req, res) => {
 });
 
 // Create a new post
-router.post('/', verify, async (req, res) => {
+router.post('/', upload.single('image'), verify, async (req, res) => {
   const post = new Post({
     user: req.user._id,
-    image: req.body.image,
+    image: req.file.path, // Use the file path from multer
     caption: req.body.caption
   });
 
