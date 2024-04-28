@@ -5,13 +5,17 @@ export default function(req, res, next) {
   const authHeader = req.header('Authorization');
   const token = authHeader && authHeader.split(' ')[1]; // Extract the token after 'Bearer'
 
+  console.log('Verifying token:', token);
+
   if (!token) return res.status(401).send('Access Denied');
 
   try {
     const verified = jwt.verify(token, process.env.TOKEN_SECRET);
+    console.log('Token verified:', verified);
     req.user = verified;
     next();
   } catch (error) {
+    console.error('Token verification error:', error);
     res.status(400).send('Invalid Token');
   }
 };
