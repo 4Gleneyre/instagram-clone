@@ -1,118 +1,92 @@
-const router = require('express').Router();
-const Post = require('../models/Post');
-const User = require('../models/User');
-const verify = require('./verifyToken');
-const mongoose = require('mongoose');
-const multer = require('multer');
+import express from 'express';
+import Post from '../models/Post.js';
+import User from '../models/User.js';
+import verify from './verifyToken.js';
+import mongoose from 'mongoose';
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
-const fs = require('fs');
 
 // Helper function to validate ObjectId
 const isValidObjectId = (id) => {
   return mongoose.Types.ObjectId.isValid(id);
 };
 
-// Helper function to log to a file
-const logToFile = (message) => {
-  fs.appendFileSync('server.log', message + '\n', (err) => {
-    if (err) {
-      console.error('Failed to write to log file:', err);
-    }
-  });
-};
-
-// Get feed posts
-router.get('/feed', verify, async (req, res) => {
-  try {
-    // Assuming the User model has a 'following' field that is an array of user IDs
-    const user = await User.findById(req.user._id);
-    logToFile('User ID: ' + req.user._id); // Log the user ID to file
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-    logToFile('User following: ' + user.following); // Log the list of user IDs the user is following to file
-    const posts = await Post.find({ user: { $in: user.following } }).populate('user', 'username');
-    logToFile('Posts found: ' + JSON.stringify(posts)); // Log the posts that are being fetched to file
-    res.json(posts);
-  } catch (err) {
-    logToFile('Error fetching feed posts: ' + err.message + '\n' + err.stack); // Log any errors encountered along with the stack trace to file
-    res.status(500).json({ message: 'Error fetching feed posts', error: err.message });
-  }
-});
-
-// Get all posts
-router.get('/', verify, async (req, res) => {
-  try {
-    const posts = await Post.find().populate('user', 'username');
-    res.json(posts);
-  } catch (err) {
-    logToFile('Error fetching all posts: ' + err.message + '\n' + err.stack); // Log any errors encountered along with the stack trace to file
-    res.status(500).json({ message: 'Error fetching all posts', error: err.message });
-  }
-});
-
-// Create a new post
-router.post('/', upload.single('image'), verify, async (req, res) => {
-  logToFile('Request Body: ' + JSON.stringify(req.body)); // Log the request body to file
-  logToFile('Request File: ' + JSON.stringify(req.file)); // Log the request file to file
-
-  const post = new Post({
-    user: req.user._id,
-    image: req.file ? req.file.path : undefined, // Use the file path from multer if available
-    caption: req.body.caption
+// POST request to create a new post
+router.post('/', verify, upload.single('file'), async (req, res) => {
+  const newPost = new Post({
+    userId: req.user._id,
+    desc: req.body.desc,
   });
 
+  if (req.file) {
+    const { path } = req.file;
+    newPost.img = fs.readFileSync(path);
+    // Add logic to handle file type and conversion if necessary
+  }
+
   try {
-    const newPost = await post.save();
-    res.status(201).json(newPost);
+    const savedPost = await newPost.save();
+    res.status(200).json(savedPost);
   } catch (err) {
-    logToFile('Error creating post: ' + err.message + '\n' + err.stack); // Log any errors encountered along with the stack trace to file
-    res.status(400).json({ message: 'Error creating post', error: err.message });
+    res.status(500).json(err);
   }
 });
 
-// Get all posts by a specific user
-router.get('/user/:userId', verify, async (req, res) => {
+// GET request to fetch all posts
+router.get('/', async (req, res) => {
   try {
-    // Validate the user ID before querying
-    if (!isValidObjectId(req.params.userId)) {
-      return res.status(400).json({ message: 'Invalid user ID format' });
-    }
-
-    const userPosts = await Post.find({ user: req.params.userId }).populate('user', 'username');
-    if (!userPosts) return res.status(404).send('Posts not found');
-    res.json(userPosts);
-  } catch (error) {
-    logToFile('Error fetching user posts: ' + error.message + '\n' + error.stack); // Log any errors encountered along with the stack trace to file
-    res.status(500).send({ message: 'Error fetching user posts', error: error.message });
-  }
-});
-
-// Get a single post
-router.get('/:id', getPost, (req, res) => {
-  res.json(res.post);
-});
-
-// Middleware to get post by ID
-async function getPost(req, res, next) {
-  let post;
-  try {
-    // Validate the post ID before querying
-    if (!isValidObjectId(req.params.id)) {
-      return res.status(400).json({ message: 'Invalid post ID format' });
-    }
-
-    post = await Post.findById(req.params.id);
-    if (post == null) {
-      return res.status(404).json({ message: 'Cannot find post' });
-    }
+    const posts = await Post.find();
+    res.status(200).json(posts);
   } catch (err) {
-    logToFile('Error finding post: ' + err.message + '\n' + err.stack); // Log any errors encountered along with the stack trace to file
-    return res.status(500).json({ message: 'Error finding post', error: err.message });
+    res.status(500).json(err);
+  }
+});
+
+// PUT request to update a post
+router.put('/:id', verify, async (req, res) => {
+  if (!isValidObjectId(req.params.id)) {
+    return res.status(400).send('Invalid post ID');
   }
 
-  res.post = post;
-  next();
-}
+  if (req.body.userId !== req.user._id) {
+    return res.status(401).send('You can only update your own posts');
+  }
+
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(req.params.id, {
+      $set: req.body,
+    }, { new: true });
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// DELETE request to delete a post
+router.delete('/:id', verify, async (req, res) => {
+  if (!isValidObjectId(req.params.id)) {
+    return res.status(400).send('Invalid post ID');
+  }
+
+  const post = await Post.findById(req.params.id);
+  if (post.userId !== req.user._id) {
+    return res.status(401).send('You can only delete your own posts');
+  }
+
+  try {
+    await post.remove();
+    res.status(200).send('Post has been deleted');
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Set up __dirname for ES Modules
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default router;
