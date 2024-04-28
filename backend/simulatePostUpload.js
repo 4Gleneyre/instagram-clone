@@ -24,6 +24,7 @@ import('node-fetch').then(({ default: fetch, FormData }) => {
     body: formData,
     headers: {
       'auth-token': authToken,
+      // 'Content-Type': 'multipart/form-data' is set automatically by fetch when using FormData
     },
   };
 
