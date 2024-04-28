@@ -61,6 +61,21 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
+// GET request to fetch the feed of posts from followed users
+router.get('/feed', verify, async (req, res) => {
+  try {
+    // Find the user and get the list of followed users
+    const user = await User.findById(req.user._id);
+    const followedUsers = user.following.map(followedUser => followedUser._id);
+
+    // Find posts where the userId is in the list of followed users
+    const posts = await Post.find({ userId: { $in: followedUsers } }).sort({ createdAt: -1 });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // PUT request to update a post
 router.put('/:id', verify, async (req, res) => {
   if (!isValidObjectId(req.params.id)) {
