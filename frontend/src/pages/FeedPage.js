@@ -12,7 +12,7 @@ const FeedPage = () => {
         console.log('Fetching posts...');
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/feed`, {
           headers: {
-            'auth-token': authToken,
+            'Authorization': 'Bearer ' + authToken,
           },
         });
         console.log('Response received:', response);
