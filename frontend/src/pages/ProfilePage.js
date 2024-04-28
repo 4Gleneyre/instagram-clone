@@ -25,7 +25,12 @@ const ProfilePage = () => {
       const fetchProfile = async () => {
         try {
           console.log(`Fetching profile for user ID: ${userId}`);
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${userId}`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${userId}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'auth-token': localStorage.getItem('auth-token')
+            }
+          });
           console.log('Full response for profile:', response);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -50,7 +55,12 @@ const ProfilePage = () => {
       const fetchPosts = async () => {
         try {
           console.log(`Fetching posts for user ID: ${userId}`);
-          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/user/${userId}`);
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/user/${userId}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              'auth-token': localStorage.getItem('auth-token')
+            }
+          });
           console.log('Full response for posts:', response);
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
