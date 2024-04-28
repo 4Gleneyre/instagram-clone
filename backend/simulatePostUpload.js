@@ -4,7 +4,7 @@ import { FormData } from '@whatwg-node/fetch';
 import fetch from 'node-fetch';
 
 const backendUrl = 'https://777a044eb87f.ngrok.app/api/posts';
-const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJkNmFjZTNkMjA4MGE0OTYzNGU4NWQiLCJpYXQiOjE3MTQyNzAzMTh9.uqKffzbYQV7NWnrjE0SyxFgqW1a7IsK5lIilz0E2eiw'; // Auth token obtained from login simulation
+const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjJkNmFjZTNkMjA4MGE0OTYzNGU4NWQiLCJpYXQiOjE3MTQyNzc1NzN9.kliDqKmlElZZk-RZIp4NjyGYqCC_99mECnNvDzvpPbI'; // Auth token obtained from login simulation
 
 // Derive the directory path from import.meta.url
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -28,22 +28,19 @@ for (const [key, value] of formData) {
   console.log(key, value);
 }
 
-// Set headers for multipart/form-data
-const options = {
+// Perform the fetch to ensure proper handling of FormData
+fetch(backendUrl, {
   method: 'POST',
   body: formData,
   headers: {
     'Authorization': `Bearer ${authToken}`,
   },
-};
-
-// Perform the fetch to ensure proper handling of FormData
-fetch(backendUrl, options)
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+})
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));
