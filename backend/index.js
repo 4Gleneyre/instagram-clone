@@ -1,11 +1,13 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const authRoutes = require('./routes/auth');
-const postRoutes = require('./routes/posts');
-const userRoutes = require('./routes/user');
-const path = require('path');
+import dotenv from 'dotenv';
+dotenv.config();
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import authRoutes from './routes/auth.js';
+import postRoutes from './routes/posts.js';
+import userRoutes from './routes/user.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 
@@ -36,5 +38,7 @@ app.use('/api/user', userRoutes);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  // Set up __dirname for ES Modules
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
   console.log(`Current working directory: ${path.resolve(__dirname)}`);
 });
