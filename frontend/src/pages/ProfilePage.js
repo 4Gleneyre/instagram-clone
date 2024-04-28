@@ -24,6 +24,11 @@ const ProfilePage = () => {
     } else {
 
       const fetchProfile = async () => {
+        if (!/^[0-9a-fA-F]{24}$/.test(userId)) {
+          console.error("Invalid user ID format:", userId);
+          setError("Invalid user ID format.");
+          return;
+        }
         try {
           console.log(`Fetching profile for user ID: ${userId}`);
           const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/user/${userId}`, {

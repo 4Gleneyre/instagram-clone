@@ -2,6 +2,12 @@ const router = require('express').Router();
 const Post = require('../models/Post');
 const User = require('../models/User');
 const verify = require('./verifyToken');
+const mongoose = require('mongoose');
+
+// Helper function to validate ObjectId
+const isValidObjectId = (id) => {
+  return mongoose.Types.ObjectId.isValid(id);
+};
 
 // Get feed posts
 router.get('/feed', verify, async (req, res) => {
@@ -53,6 +59,11 @@ router.post('/', verify, async (req, res) => {
 // Get all posts by a specific user
 router.get('/user/:userId', verify, async (req, res) => {
   try {
+    // Validate the user ID before querying
+    if (!isValidObjectId(req.params.userId)) {
+      return res.status(400).json({ message: 'Invalid user ID format' });
+    }
+
     const userPosts = await Post.find({ user: req.params.userId }).populate('user', 'username');
     if (!userPosts) return res.status(404).send('Posts not found');
     res.json(userPosts);
@@ -71,6 +82,11 @@ router.get('/:id', getPost, (req, res) => {
 async function getPost(req, res, next) {
   let post;
   try {
+    // Validate the post ID before querying
+    if (!isValidObjectId(req.params.id)) {
+      return res.status(400).json({ message: 'Invalid post ID format' });
+    }
+
     post = await Post.findById(req.params.id);
     if (post == null) {
       return res.status(404).json({ message: 'Cannot find post' });
